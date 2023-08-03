@@ -18,6 +18,8 @@ import { TextField } from 'components/ui/textfield';
 import { useFormAction, useSubmit } from 'react-router-dom';
 import { createFormData } from 'lib/utils';
 
+type Client = Omit<IClient, 'id'>;
+
 export default function CreateNewClientDialog({
 	onClose,
 	...props
@@ -32,14 +34,36 @@ export default function CreateNewClientDialog({
 	);
 }
 
+function CreateNewClientDialogTitle(props: { id: string; children?: ReactNode; onClose?: () => void }) {
+	const { children, onClose, ...other } = props;
+
+	return (
+		<DialogTitle sx={{ p: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} {...other}>
+			{children}
+			{onClose ? (
+				<IconButton
+					aria-label='close'
+					onClick={onClose}
+					sx={{
+						color: (theme) => theme.palette.grey[500],
+					}}
+				>
+					<CloseIcon />
+				</IconButton>
+			) : null}
+		</DialogTitle>
+	);
+}
+
 function CreateNewClientDialogContent({ onNextFormContent }: { onNextFormContent?: () => void }) {
 	// For form
-	const [formFieldValues, setFormFieldValues] = useState({
+	const [formFieldValues, setFormFieldValues] = useState<Client>({
 		firstName: '',
 		lastName: '',
 		email: '',
 		phoneNumber: '',
 	});
+	const [formFieldErrors, setFormFieldErrors] = useState({});
 	const handleTextFieldChange: ChangeEventHandler<HTMLInputElement> = (event) => {
 		const { name, value } = event.currentTarget;
 		setFormFieldValues({
@@ -53,6 +77,17 @@ function CreateNewClientDialogContent({ onNextFormContent }: { onNextFormContent
 	// For form content stepper
 	const [activeFormContentStep, setActiveFormContentStep] = useState(0);
 	function handleNextFormContent() {
+		// Validate the form content before continuing.
+		const errors = formContentSteps[activeFormContentStep].validateFormFieldValues(formFieldValues);
+		// Set the errors or do a reset.
+		setFormFieldErrors(errors);
+
+		// Early exit if there are errors
+		if (Object.keys(errors).length > 0) {
+			return;
+		}
+
+		// If the user is on the last step, submit an action.
 		if (activeFormContentStep === formContentSteps.length - 1) {
 			submitForm(createFormData(formFieldValues), { action: formAction, method: 'POST' });
 			onNextFormContent?.();
@@ -68,8 +103,8 @@ function CreateNewClientDialogContent({ onNextFormContent }: { onNextFormContent
 		<FormContent
 			values={formFieldValues}
 			onChange={handleTextFieldChange}
-			errors={{}}
-			textFields={formContentSteps[activeFormContentStep].textFields}
+			errors={formFieldErrors}
+			formFields={formContentSteps[activeFormContentStep].formFields}
 		/>
 	);
 
@@ -113,72 +148,6 @@ function CreateNewClientDialogContent({ onNextFormContent }: { onNextFormContent
 	);
 }
 
-function CreateNewClientDialogTitle(props: { id: string; children?: ReactNode; onClose?: () => void }) {
-	const { children, onClose, ...other } = props;
-
-	return (
-		<DialogTitle sx={{ p: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} {...other}>
-			{children}
-			{onClose ? (
-				<IconButton
-					aria-label='close'
-					onClick={onClose}
-					sx={{
-						color: (theme) => theme.palette.grey[500],
-					}}
-				>
-					<CloseIcon />
-				</IconButton>
-			) : null}
-		</DialogTitle>
-	);
-}
-
-type FormTextField = {
-	id: string;
-	name: keyof Omit<IClient, 'id'>;
-	label: string;
-};
-
-const formContentSteps: {
-	label: string;
-	value: string;
-	textFields: FormTextField[];
-}[] = [
-	{
-		label: 'Personal Details',
-		value: 'personal',
-		textFields: [
-			{
-				id: 'firstName-textfield',
-				name: 'firstName',
-				label: 'First name',
-			},
-			{
-				id: 'lastName-textfield',
-				name: 'lastName',
-				label: 'Last name',
-			},
-		],
-	},
-	{
-		label: 'Contact Details',
-		value: 'contact',
-		textFields: [
-			{
-				id: 'email-textfield',
-				name: 'email',
-				label: 'Email',
-			},
-			{
-				id: 'phoneNumber-textfield',
-				name: 'phoneNumber',
-				label: 'Phone number',
-			},
-		],
-	},
-];
-
 function FormContentStepper({ activeStep }: { activeStep: number }) {
 	return (
 		<Box sx={{ width: 500 }}>
@@ -196,20 +165,97 @@ function FormContentStepper({ activeStep }: { activeStep: number }) {
 	);
 }
 
+type FormField = {
+	id: string;
+	name: keyof Client;
+	label: string;
+};
+
+const formContentSteps: {
+	label: string;
+	value: string;
+	formFields: FormField[];
+	validateFormFieldValues: (values: Client) => Record<string, string>;
+}[] = [
+	{
+		label: 'Personal Details',
+		value: 'personal',
+		formFields: [
+			{
+				id: 'firstName-textfield',
+				name: 'firstName',
+				label: 'First name',
+			},
+			{
+				id: 'lastName-textfield',
+				name: 'lastName',
+				label: 'Last name',
+			},
+		],
+		validateFormFieldValues(values: Client) {
+			const errors: Record<string, string> = {};
+			if (values.firstName === '') {
+				errors.firstName = ERROR_MESSAGES.required;
+			}
+			if (values.lastName === '') {
+				errors.lastName = ERROR_MESSAGES.required;
+			}
+			if (Object.keys(errors).length) {
+				return errors;
+			}
+			return {};
+		},
+	},
+	{
+		label: 'Contact Details',
+		value: 'contact',
+		formFields: [
+			{
+				id: 'email-textfield',
+				name: 'email',
+				label: 'Email',
+			},
+			{
+				id: 'phoneNumber-textfield',
+				name: 'phoneNumber',
+				label: 'Phone number',
+			},
+		],
+		validateFormFieldValues(values: Client) {
+			const errors: Record<string, string> = {};
+			if (values.email === '') {
+				errors.email = ERROR_MESSAGES.required;
+			}
+			if (values.phoneNumber === '') {
+				errors.phoneNumber = ERROR_MESSAGES.required;
+			}
+			if (Object.keys(errors).length) {
+				return errors;
+			}
+			return {};
+		},
+	},
+];
+
+const ERROR_MESSAGES = {
+	required: 'This field is required.',
+	invalidEmail: 'Invalid email.',
+};
+
 function FormContent({
 	values,
 	errors,
 	onChange,
-	textFields,
+	formFields,
 }: {
 	values: Record<string, string>;
 	errors: Record<string, string | undefined>;
 	onChange?: ChangeEventHandler;
-	textFields: FormTextField[];
+	formFields: FormField[];
 }) {
 	return (
 		<Stack gap={2}>
-			{textFields.map(({ name, ...input }) => (
+			{formFields.map(({ name, ...input }) => (
 				<TextField
 					key={name}
 					{...input}

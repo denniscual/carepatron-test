@@ -13,7 +13,7 @@ type LoaderData = { clients: IClient[]; q: string };
  * Load the data once the route segment matches the URL path.
  */
 export const loader: LoaderFunction = async ({ request }) => {
-	// In real-world scenario, you should use caching to efficiently handle the server state. E.g tools are react-query and useSwr.
+	// In real-world app, you should use caching to efficiently handle the server state. E.g tools are react-query and useSwr.
 	const clients = await getClients();
 	const url = new URL(request.url);
 	const q = url.searchParams.get('q') ?? '';
@@ -23,6 +23,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 	};
 };
 
+/**
+ * Do an action once the user submits a form action like POST, UPDATE, etc. The action will run if the route segment matches the URL path.
+ * After the action completes, the data on the page is revalidated to capture any mutations that may have happened,
+ * automatically keeping your UI in sync with your server state
+ */
 export const action: ActionFunction = async ({ request }) => {
 	try {
 		const formData = await request.formData();
@@ -54,8 +59,6 @@ export default function Root() {
 	// Behind the scene, React will put lower priority to the depended Components. In this way, React can prioritize work that
 	// has higher priority level like "user input". Using Transition API, main thread performance becomes effecient.
 	const deferredClients = useDeferredValue(filteredClients);
-
-	console.log({ clients, q });
 
 	return (
 		<Stack gap={4}>
