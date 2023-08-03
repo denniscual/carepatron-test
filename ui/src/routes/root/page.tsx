@@ -1,9 +1,9 @@
-import { LoaderFunction, useLoaderData } from 'react-router-dom';
+import { ActionFunction, LoaderFunction, redirect, useLoaderData } from 'react-router-dom';
 import { Button, Paper, Stack, Typography } from '@mui/material';
 import ClientTable from './ClientTable';
-import { getClients } from 'services/api';
+import { createClient, getClients } from 'services/api';
 import { useDeferredValue, useState } from 'react';
-import { searchItems } from 'lib/utils';
+import { generateId, searchItems } from 'lib/utils';
 import SearchBar from './search-bar';
 import CreateNewClientDialog from './create-new-client-dialog';
 
@@ -21,6 +21,27 @@ export const loader: LoaderFunction = async ({ request }) => {
 		clients,
 		q,
 	};
+};
+
+export const action: ActionFunction = async ({ request }) => {
+	try {
+		const formData = await request.formData();
+		const newClient = {
+			...Object.fromEntries(formData),
+			id: generateId(),
+		} as IClient;
+		switch (request.method) {
+			case 'POST': {
+				await createClient(newClient);
+				return redirect('/');
+			}
+			default: {
+				throw new Error('Unhandled action method.');
+			}
+		}
+	} catch (err) {
+		throw err;
+	}
 };
 
 export default function Root() {

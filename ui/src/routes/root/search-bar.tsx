@@ -18,7 +18,7 @@ export default function SearchBar({ query }: { query: string }) {
 		<OutlinedInput
 			sx={{ width: '35ch' }}
 			size='small'
-			ref={searchRef}
+			inputRef={searchRef}
 			type='search'
 			endAdornment={
 				<InputAdornment position='end'>

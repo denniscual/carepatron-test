@@ -15,11 +15,24 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { ChangeEventHandler, ComponentProps, ReactNode, useState } from 'react';
 import { TextField } from 'components/ui/textfield';
+import { useFormAction, useSubmit } from 'react-router-dom';
+import { createFormData } from 'lib/utils';
 
 export default function CreateNewClientDialog({
 	onClose,
 	...props
 }: Omit<ComponentProps<typeof Dialog>, 'onClose'> & { onClose?: () => void }) {
+	return (
+		<Dialog {...props} onClose={onClose}>
+			<CreateNewClientDialogTitle onClose={onClose} id='create-new-client-dialog-title'>
+				Create New Client
+			</CreateNewClientDialogTitle>
+			<CreateNewClientDialogContent onNextFormContent={onClose} />
+		</Dialog>
+	);
+}
+
+function CreateNewClientDialogContent({ onNextFormContent }: { onNextFormContent?: () => void }) {
 	// For form
 	const [formFieldValues, setFormFieldValues] = useState({
 		firstName: '',
@@ -34,10 +47,18 @@ export default function CreateNewClientDialog({
 			[name]: value,
 		});
 	};
+	const formAction = useFormAction();
+	const submitForm = useSubmit();
 
 	// For form content stepper
 	const [activeFormContentStep, setActiveFormContentStep] = useState(0);
 	function handleNextFormContent() {
+		if (activeFormContentStep === formContentSteps.length - 1) {
+			submitForm(createFormData(formFieldValues), { action: formAction, method: 'POST' });
+			onNextFormContent?.();
+			return;
+		}
+
 		setActiveFormContentStep(activeFormContentStep + 1);
 	}
 	function handleBackFormContent() {
@@ -53,10 +74,7 @@ export default function CreateNewClientDialog({
 	);
 
 	return (
-		<Dialog {...props} onClose={onClose}>
-			<CreateNewClientDialogTitle onClose={onClose} id='create-new-client-dialog-title'>
-				Create New Client
-			</CreateNewClientDialogTitle>
+		<>
 			<DialogContent>
 				<Stack
 					gap={3}
@@ -91,7 +109,7 @@ export default function CreateNewClientDialog({
 					{activeFormContentStep === formContentSteps.length - 1 ? 'Create Client' : 'Continue'}
 				</Button>
 			</DialogActions>
-		</Dialog>
+		</>
 	);
 }
 

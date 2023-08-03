@@ -1,6 +1,6 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Layout from './layout';
-import Root, { loader as rootLoader } from './root/page';
+import Root, { loader as rootLoader, action as rootAction } from './root/page';
 
 const router = createBrowserRouter([
 	{
@@ -11,6 +11,7 @@ const router = createBrowserRouter([
 				index: true,
 				element: <Root />,
 				loader: rootLoader,
+				action: rootAction,
 			},
 		],
 	},
