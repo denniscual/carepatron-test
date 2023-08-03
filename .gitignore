@@ -128,3 +128,6 @@ ui/cypress/videos/*
 
 mock-api/build
 mock-api/package-lock.json
+
+# nvimlogs
+*.nvimlog
