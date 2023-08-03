@@ -14,9 +14,9 @@ import { getClients } from 'services/api';
 import { Search } from '@mui/icons-material';
 
 export default function Root() {
-	const { clients } = useLoaderData() as LoaderData;
+	const { clients, q } = useLoaderData() as LoaderData;
 
-	console.log({ clients });
+	console.log({ clients, q });
 
 	return (
 		<Stack gap={4}>
@@ -50,12 +50,15 @@ export default function Root() {
 	);
 }
 
-type LoaderData = { clients: IClient[] };
+type LoaderData = { clients: IClient[]; q: string };
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
 	const clients = await getClients();
+	const url = new URL(request.url);
+	const q = url.searchParams.get('q') ?? '';
 
 	return {
 		clients,
+		q,
 	};
 };
