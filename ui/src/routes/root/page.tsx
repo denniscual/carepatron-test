@@ -1,8 +1,18 @@
 import { LoaderFunction, useLoaderData } from 'react-router-dom';
-import { Button, Paper, Stack, Typography } from '@mui/material';
+import {
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
+	Paper,
+	Stack,
+	Typography,
+} from '@mui/material';
 import ClientTable from './ClientTable';
 import { getClients } from 'services/api';
-import { useDeferredValue } from 'react';
+import { useDeferredValue, useState } from 'react';
 import { searchItems } from 'lib/utils';
 import SearchBar from './search-bar';
 
@@ -19,6 +29,8 @@ export default function Root() {
 
 	console.log({ clients, q });
 
+	const [open, setOpen] = useState(false);
+
 	return (
 		<Stack gap={4}>
 			<Typography variant='h1' sx={{ textAlign: 'start', fontSize: 'h4.fontSize' }} fontWeight={600}>
@@ -27,9 +39,23 @@ export default function Root() {
 			<Stack gap={3.5}>
 				<Stack direction='row' justifyContent='space-between'>
 					<SearchBar query={q} />
-					<Button size='small' variant='contained'>
+					<Button variant='contained' onClick={() => setOpen(true)}>
 						Create New Client
 					</Button>
+					<Dialog open={open} onClose={() => setOpen(false)} aria-labelledby='responsive-dialog-title'>
+						<DialogTitle id='responsive-dialog-title'>{"Use Google's location service?"}</DialogTitle>
+						<DialogContent>
+							<DialogContentText>
+								Let Google help apps determine location. This means sending anonymous location data to
+								Google, even when no apps are running.
+							</DialogContentText>
+						</DialogContent>
+						<DialogActions>
+							<Button onClick={() => setOpen(false)} variant='contained'>
+								Continue
+							</Button>
+						</DialogActions>
+					</Dialog>
 				</Stack>
 				<Paper>
 					<ClientTable clients={deferredClients} />
