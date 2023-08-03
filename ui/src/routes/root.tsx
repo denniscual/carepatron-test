@@ -7,5 +7,5 @@ export default function Root() {
 }
 
 export const loader: LoaderFunction = async () => {
-	return new Promise((res) => setTimeout(() => res('hello'), 5000));
+	return new Promise((res) => setTimeout(() => res('hello'), 1000));
 };
