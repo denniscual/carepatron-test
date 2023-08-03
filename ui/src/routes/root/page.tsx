@@ -12,12 +12,13 @@ import {
 import ClientTable from './ClientTable';
 import { getClients } from 'services/api';
 import { Search } from '@mui/icons-material';
-import { ElementRef, useEffect, useRef } from 'react';
+import { ElementRef, useEffect, useRef, useDeferredValue } from 'react';
 
 export default function Root() {
 	const { clients, q } = useLoaderData() as LoaderData;
 	const navigate = useNavigate();
 	const searchRef = useRef<ElementRef<'input'>>(null);
+	const deferredClients = useDeferredValue(clients);
 
 	console.log({ clients, q });
 
@@ -58,13 +59,12 @@ export default function Root() {
 							}}
 						/>
 					</FormControl>
-
 					<Button size='small' variant='contained'>
 						Create New Client
 					</Button>
 				</Stack>
 				<Paper>
-					<ClientTable clients={clients} />
+					<ClientTable clients={deferredClients} />
 				</Paper>
 			</Stack>
 		</Stack>
