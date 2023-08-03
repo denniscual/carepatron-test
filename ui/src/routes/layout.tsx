@@ -1,12 +1,18 @@
 import { Outlet } from 'react-router-dom';
+import { Container } from '@mui/material';
 
 export default function Layout() {
 	return (
-		<div>
-			<h1>Index</h1>
-			<div>
+		<Container
+			sx={{
+				height: '100%',
+				py: 6,
+			}}
+			maxWidth='md'
+		>
+			<main>
 				<Outlet />
-			</div>
-		</div>
+			</main>
+		</Container>
 	);
 }
