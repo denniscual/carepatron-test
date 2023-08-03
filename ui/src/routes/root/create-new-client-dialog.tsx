@@ -6,27 +6,29 @@ import {
 	DialogContent,
 	DialogTitle,
 	IconButton,
+	Stack,
 	Step,
 	StepLabel,
 	Stepper,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { ComponentProps, ReactNode, useState } from 'react';
+import { ChangeEventHandler, ComponentProps, ReactNode, useState } from 'react';
+import { TextField } from 'components/ui/textfield';
 
 export default function CreateNewClientDialog({
 	onClose,
 	...props
 }: Omit<ComponentProps<typeof Dialog>, 'onClose'> & { onClose?: () => void }) {
+	// For form content stepper
 	const [activeFormContentStep, setActiveFormContentStep] = useState(0);
-
-	const handleNextFormContent = () => {
+	function handleNextFormContent() {
 		setActiveFormContentStep(activeFormContentStep + 1);
-	};
-
-	const handleBackFormContent = () => {
+	}
+	function handleBackFormContent() {
 		setActiveFormContentStep(activeFormContentStep - 1);
-	};
+	}
+	const ActiveFormContent = steps[activeFormContentStep].Component;
 
 	return (
 		<Dialog {...props} onClose={onClose}>
@@ -34,17 +36,20 @@ export default function CreateNewClientDialog({
 				Create New Client
 			</CreateNewClientDialogTitle>
 			<DialogContent>
-				<FormContentStepper activeStep={activeFormContentStep} />
-				<div
-					style={{
+				<Stack
+					gap={3}
+					sx={{
 						width: 500,
 					}}
-				/>
+				>
+					<FormContentStepper activeStep={activeFormContentStep} />
+					<ActiveFormContent values={{}} errors={{}} />
+				</Stack>
 			</DialogContent>
 			<DialogActions
 				sx={{
 					p: 3,
-					mt: 3,
+					mt: 1,
 					display: 'flex',
 					justifyContent: 'space-between',
 					alignItems: 'center',
@@ -89,9 +94,102 @@ function CreateNewClientDialogTitle(props: { id: string; children?: ReactNode; o
 	);
 }
 
+const steps: {
+	label: string;
+	value: string;
+	Component: typeof PersonalDetailsFormContent;
+}[] = [
+	{
+		label: 'Personal Details',
+		value: 'personal',
+		Component: PersonalDetailsFormContent,
+	},
+	{
+		label: 'Contact Details',
+		value: 'contact',
+		Component: ContactDetailsFormContent,
+	},
+];
+
+function PersonalDetailsFormContent({
+	values,
+	errors,
+	onChange,
+}: {
+	values: Record<string, string>;
+	errors: Record<string, string | undefined>;
+	onChange?: ChangeEventHandler;
+}) {
+	const inputs = [
+		{
+			id: 'firstName-textfield',
+			name: 'firstname',
+			label: 'First name',
+		},
+		{
+			id: 'lastName-textfield',
+			name: 'lastname',
+			label: 'Last name',
+		},
+	];
+
+	return (
+		<Stack gap={2}>
+			{inputs.map(({ name, ...input }) => (
+				<TextField
+					key={name}
+					{...input}
+					size='small'
+					onChange={onChange}
+					value={values[name]}
+					error={errors[name]}
+				/>
+			))}
+		</Stack>
+	);
+}
+
+function ContactDetailsFormContent({
+	values,
+	errors,
+	onChange,
+}: {
+	values: Record<string, string>;
+	errors: Record<string, string | undefined>;
+	onChange?: ChangeEventHandler;
+}) {
+	const inputs = [
+		{
+			id: 'email-textfield',
+			name: 'email',
+			label: 'Email',
+		},
+		{
+			id: 'phoneNumber-textfield',
+			name: 'phoneNumber',
+			label: 'Phone number',
+		},
+	];
+
+	return (
+		<Stack gap={2}>
+			{inputs.map(({ name, ...input }) => (
+				<TextField
+					key={name}
+					{...input}
+					size='small'
+					onChange={onChange}
+					value={values[name]}
+					error={errors[name]}
+				/>
+			))}
+		</Stack>
+	);
+}
+
 function FormContentStepper({ activeStep }: { activeStep: number }) {
 	return (
-		<Box sx={{ width: '100%' }}>
+		<Box sx={{ width: 500 }}>
 			<Stepper activeStep={activeStep}>
 				{steps.map((step) => {
 					const stepProps: { completed?: boolean } = {};
@@ -105,14 +203,3 @@ function FormContentStepper({ activeStep }: { activeStep: number }) {
 		</Box>
 	);
 }
-
-const steps = [
-	{
-		label: 'Personal Details',
-		value: 'personal',
-	},
-	{
-		label: 'Contact Details',
-		value: 'contact',
-	},
-];
