@@ -7,6 +7,24 @@ import { searchItems } from 'lib/utils';
 import SearchBar from './search-bar';
 import CreateNewClientDialog from './create-new-client-dialog';
 
+type LoaderData = { clients: IClient[]; q: string };
+
+/**
+ * Use caching mechanism here to avoid sending unnecessary requests to the server. E.g, use react-query.
+ */
+export const loader: LoaderFunction = async ({ request }) => {
+	const clients = await getClients();
+	const url = new URL(request.url);
+	const q = url.searchParams.get('q') ?? '';
+
+	// Filter the clients based on the `query`.
+
+	return {
+		clients,
+		q,
+	};
+};
+
 export default function Root() {
 	const { clients, q } = useLoaderData() as LoaderData;
 	// NOTE: When dealing with huge volume of clients, its good to memoize the computation using `useMemo`.
@@ -47,21 +65,3 @@ export default function Root() {
 		</Stack>
 	);
 }
-
-type LoaderData = { clients: IClient[]; q: string };
-
-/**
- * Use caching mechanism here to avoid sending unnecessary requests to the server. E.g, use react-query.
- */
-export const loader: LoaderFunction = async ({ request }) => {
-	const clients = await getClients();
-	const url = new URL(request.url);
-	const q = url.searchParams.get('q') ?? '';
-
-	// Filter the clients based on the `query`.
-
-	return {
-		clients,
-		q,
-	};
-};

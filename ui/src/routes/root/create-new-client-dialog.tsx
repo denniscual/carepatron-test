@@ -9,23 +9,32 @@ import {
 	Step,
 	StepLabel,
 	Stepper,
-	Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { ComponentProps, Fragment, ReactNode, useState } from 'react';
+import { ComponentProps, ReactNode, useState } from 'react';
 
 export default function CreateNewClientDialog({
 	onClose,
 	...props
 }: Omit<ComponentProps<typeof Dialog>, 'onClose'> & { onClose?: () => void }) {
+	const [activeFormContentStep, setActiveFormContentStep] = useState(0);
+
+	const handleNextFormContent = () => {
+		setActiveFormContentStep(activeFormContentStep + 1);
+	};
+
+	const handleBackFormContent = () => {
+		setActiveFormContentStep(activeFormContentStep - 1);
+	};
+
 	return (
 		<Dialog {...props} onClose={onClose}>
 			<CreateNewClientDialogTitle onClose={onClose} id='create-new-client-dialog-title'>
 				Create New Client
 			</CreateNewClientDialogTitle>
 			<DialogContent>
-				<FormStepper />
+				<FormContentStepper activeStep={activeFormContentStep} />
 				<div
 					style={{
 						width: 500,
@@ -41,11 +50,18 @@ export default function CreateNewClientDialog({
 					alignItems: 'center',
 				}}
 			>
-				<Button startIcon={<ArrowBackIcon />} variant='text'>
+				<Button
+					sx={{
+						visibility: activeFormContentStep === 0 ? 'hidden' : 'visible',
+					}}
+					startIcon={<ArrowBackIcon />}
+					variant='text'
+					onClick={handleBackFormContent}
+				>
 					Back
 				</Button>
-				<Button onClick={onClose} variant='contained'>
-					Continue
+				<Button variant='contained' onClick={handleNextFormContent}>
+					{activeFormContentStep === steps.length - 1 ? 'Create Client' : 'Continue'}
 				</Button>
 			</DialogActions>
 		</Dialog>
@@ -73,41 +89,30 @@ function CreateNewClientDialogTitle(props: { id: string; children?: ReactNode; o
 	);
 }
 
-const steps = ['Personal Details', 'Contact Details'];
-
-function FormStepper() {
-	const [activeStep, setActiveStep] = useState(0);
-
-	const handleNext = () => {
-		setActiveStep((prevActiveStep) => prevActiveStep + 1);
-	};
-
-	const handleBack = () => {
-		setActiveStep((prevActiveStep) => prevActiveStep - 1);
-	};
-
+function FormContentStepper({ activeStep }: { activeStep: number }) {
 	return (
 		<Box sx={{ width: '100%' }}>
 			<Stepper activeStep={activeStep}>
-				{steps.map((label) => {
+				{steps.map((step) => {
 					const stepProps: { completed?: boolean } = {};
 					return (
-						<Step key={label} {...stepProps}>
-							<StepLabel>{label}</StepLabel>
+						<Step key={step.value} {...stepProps}>
+							<StepLabel>{step.label}</StepLabel>
 						</Step>
 					);
 				})}
 			</Stepper>
-			<Fragment>
-				<Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-				<Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-					<Button color='inherit' disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
-						Back
-					</Button>
-					<Box sx={{ flex: '1 1 auto' }} />
-					<Button onClick={handleNext}>{activeStep === steps.length - 1 ? 'Finish' : 'Next'}</Button>
-				</Box>
-			</Fragment>
 		</Box>
 	);
 }
+
+const steps = [
+	{
+		label: 'Personal Details',
+		value: 'personal',
+	},
+	{
+		label: 'Contact Details',
+		value: 'contact',
+	},
+];
