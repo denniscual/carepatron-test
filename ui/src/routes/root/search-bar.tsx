@@ -1,5 +1,5 @@
 import { InputAdornment, OutlinedInput } from '@mui/material';
-import { Search } from '@mui/icons-material';
+import SearchIcon from '@mui/icons-material/Search';
 import { ElementRef, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,7 +22,7 @@ export default function SearchBar({ query }: { query: string }) {
 			type='search'
 			endAdornment={
 				<InputAdornment position='end'>
-					<Search />
+					<SearchIcon />
 				</InputAdornment>
 			}
 			aria-label='Search clients'
