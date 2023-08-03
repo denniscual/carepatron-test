@@ -20,6 +20,21 @@ export default function CreateNewClientDialog({
 	onClose,
 	...props
 }: Omit<ComponentProps<typeof Dialog>, 'onClose'> & { onClose?: () => void }) {
+	// For form
+	const [formFieldValues, setFormFieldValues] = useState({
+		firstName: '',
+		lastName: '',
+		email: '',
+		phoneNumber: '',
+	});
+	const handleTextFieldChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+		const { name, value } = event.currentTarget;
+		setFormFieldValues({
+			...formFieldValues,
+			[name]: value,
+		});
+	};
+
 	// For form content stepper
 	const [activeFormContentStep, setActiveFormContentStep] = useState(0);
 	function handleNextFormContent() {
@@ -28,7 +43,14 @@ export default function CreateNewClientDialog({
 	function handleBackFormContent() {
 		setActiveFormContentStep(activeFormContentStep - 1);
 	}
-	const ActiveFormContent = steps[activeFormContentStep].Component;
+	const activeFormContent = (
+		<FormContent
+			values={formFieldValues}
+			onChange={handleTextFieldChange}
+			errors={{}}
+			textFields={formContentSteps[activeFormContentStep].textFields}
+		/>
+	);
 
 	return (
 		<Dialog {...props} onClose={onClose}>
@@ -43,7 +65,7 @@ export default function CreateNewClientDialog({
 					}}
 				>
 					<FormContentStepper activeStep={activeFormContentStep} />
-					<ActiveFormContent values={{}} errors={{}} />
+					{activeFormContent}
 				</Stack>
 			</DialogContent>
 			<DialogActions
@@ -66,7 +88,7 @@ export default function CreateNewClientDialog({
 					Back
 				</Button>
 				<Button variant='contained' onClick={handleNextFormContent}>
-					{activeFormContentStep === steps.length - 1 ? 'Create Client' : 'Continue'}
+					{activeFormContentStep === formContentSteps.length - 1 ? 'Create Client' : 'Continue'}
 				</Button>
 			</DialogActions>
 		</Dialog>
@@ -94,104 +116,56 @@ function CreateNewClientDialogTitle(props: { id: string; children?: ReactNode; o
 	);
 }
 
-const steps: {
+type FormTextField = {
+	id: string;
+	name: keyof Omit<IClient, 'id'>;
+	label: string;
+};
+
+const formContentSteps: {
 	label: string;
 	value: string;
-	Component: typeof PersonalDetailsFormContent;
+	textFields: FormTextField[];
 }[] = [
 	{
 		label: 'Personal Details',
 		value: 'personal',
-		Component: PersonalDetailsFormContent,
+		textFields: [
+			{
+				id: 'firstName-textfield',
+				name: 'firstName',
+				label: 'First name',
+			},
+			{
+				id: 'lastName-textfield',
+				name: 'lastName',
+				label: 'Last name',
+			},
+		],
 	},
 	{
 		label: 'Contact Details',
 		value: 'contact',
-		Component: ContactDetailsFormContent,
+		textFields: [
+			{
+				id: 'email-textfield',
+				name: 'email',
+				label: 'Email',
+			},
+			{
+				id: 'phoneNumber-textfield',
+				name: 'phoneNumber',
+				label: 'Phone number',
+			},
+		],
 	},
 ];
-
-function PersonalDetailsFormContent({
-	values,
-	errors,
-	onChange,
-}: {
-	values: Record<string, string>;
-	errors: Record<string, string | undefined>;
-	onChange?: ChangeEventHandler;
-}) {
-	const inputs = [
-		{
-			id: 'firstName-textfield',
-			name: 'firstname',
-			label: 'First name',
-		},
-		{
-			id: 'lastName-textfield',
-			name: 'lastname',
-			label: 'Last name',
-		},
-	];
-
-	return (
-		<Stack gap={2}>
-			{inputs.map(({ name, ...input }) => (
-				<TextField
-					key={name}
-					{...input}
-					size='small'
-					onChange={onChange}
-					value={values[name]}
-					error={errors[name]}
-				/>
-			))}
-		</Stack>
-	);
-}
-
-function ContactDetailsFormContent({
-	values,
-	errors,
-	onChange,
-}: {
-	values: Record<string, string>;
-	errors: Record<string, string | undefined>;
-	onChange?: ChangeEventHandler;
-}) {
-	const inputs = [
-		{
-			id: 'email-textfield',
-			name: 'email',
-			label: 'Email',
-		},
-		{
-			id: 'phoneNumber-textfield',
-			name: 'phoneNumber',
-			label: 'Phone number',
-		},
-	];
-
-	return (
-		<Stack gap={2}>
-			{inputs.map(({ name, ...input }) => (
-				<TextField
-					key={name}
-					{...input}
-					size='small'
-					onChange={onChange}
-					value={values[name]}
-					error={errors[name]}
-				/>
-			))}
-		</Stack>
-	);
-}
 
 function FormContentStepper({ activeStep }: { activeStep: number }) {
 	return (
 		<Box sx={{ width: 500 }}>
 			<Stepper activeStep={activeStep}>
-				{steps.map((step) => {
+				{formContentSteps.map((step) => {
 					const stepProps: { completed?: boolean } = {};
 					return (
 						<Step key={step.value} {...stepProps}>
@@ -201,5 +175,33 @@ function FormContentStepper({ activeStep }: { activeStep: number }) {
 				})}
 			</Stepper>
 		</Box>
+	);
+}
+
+function FormContent({
+	values,
+	errors,
+	onChange,
+	textFields,
+}: {
+	values: Record<string, string>;
+	errors: Record<string, string | undefined>;
+	onChange?: ChangeEventHandler;
+	textFields: FormTextField[];
+}) {
+	return (
+		<Stack gap={2}>
+			{textFields.map(({ name, ...input }) => (
+				<TextField
+					key={name}
+					{...input}
+					name={name}
+					size='small'
+					onChange={onChange}
+					value={values[name]}
+					error={errors[name]}
+				/>
+			))}
+		</Stack>
 	);
 }

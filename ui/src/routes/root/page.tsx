@@ -10,15 +10,13 @@ import CreateNewClientDialog from './create-new-client-dialog';
 type LoaderData = { clients: IClient[]; q: string };
 
 /**
- * Use caching mechanism here to avoid sending unnecessary requests to the server. E.g, use react-query.
+ * Load the data once the route segment matches the URL path.
  */
 export const loader: LoaderFunction = async ({ request }) => {
+	// In real-world scenario, you should use caching to efficiently handle the server state. E.g tools are react-query and useSwr.
 	const clients = await getClients();
 	const url = new URL(request.url);
 	const q = url.searchParams.get('q') ?? '';
-
-	// Filter the clients based on the `query`.
-
 	return {
 		clients,
 		q,
@@ -38,8 +36,6 @@ export default function Root() {
 
 	console.log({ clients, q });
 
-	const [open, setOpen] = useState(false);
-
 	return (
 		<Stack gap={4}>
 			<Typography variant='h1' sx={{ textAlign: 'start', fontSize: 'h4.fontSize' }} fontWeight={600}>
@@ -48,20 +44,29 @@ export default function Root() {
 			<Stack gap={3.5}>
 				<Stack direction='row' justifyContent='space-between'>
 					<SearchBar query={q} />
-					<Button variant='contained' onClick={() => setOpen(true)}>
-						Create New Client
-					</Button>
-					<CreateNewClientDialog
-						maxWidth='sm'
-						open={open}
-						onClose={() => setOpen(false)}
-						aria-labelledby='create-new-client-dialog-title'
-					/>
+					<CreateNewClientDialogButtonTrigger />
 				</Stack>
 				<Paper>
 					<ClientTable clients={deferredClients} />
 				</Paper>
 			</Stack>
 		</Stack>
+	);
+}
+
+function CreateNewClientDialogButtonTrigger() {
+	const [open, setOpen] = useState(false);
+	return (
+		<>
+			<Button variant='contained' onClick={() => setOpen(true)}>
+				Create New Client
+			</Button>
+			<CreateNewClientDialog
+				maxWidth='sm'
+				open={open}
+				onClose={() => setOpen(false)}
+				aria-labelledby='create-new-client-dialog-title'
+			/>
+		</>
 	);
 }
