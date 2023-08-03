@@ -1,15 +1,19 @@
 import {
+	Box,
 	Button,
 	Dialog,
 	DialogActions,
 	DialogContent,
-	DialogContentText,
 	DialogTitle,
 	IconButton,
+	Step,
+	StepLabel,
+	Stepper,
+	Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { ComponentProps } from 'react';
+import { ComponentProps, Fragment, ReactNode, useState } from 'react';
 
 export default function CreateNewClientDialog({
 	onClose,
@@ -18,13 +22,15 @@ export default function CreateNewClientDialog({
 	return (
 		<Dialog {...props} onClose={onClose}>
 			<CreateNewClientDialogTitle onClose={onClose} id='create-new-client-dialog-title'>
-				{"Use Google's location service?"}
+				Create New Client
 			</CreateNewClientDialogTitle>
 			<DialogContent>
-				<DialogContentText>
-					Let Google help apps determine location. This means sending anonymous location data to Google, even
-					when no apps are running.
-				</DialogContentText>
+				<FormStepper />
+				<div
+					style={{
+						width: 500,
+					}}
+				/>
 			</DialogContent>
 			<DialogActions
 				sx={{
@@ -46,7 +52,7 @@ export default function CreateNewClientDialog({
 	);
 }
 
-function CreateNewClientDialogTitle(props: { id: string; children?: React.ReactNode; onClose?: () => void }) {
+function CreateNewClientDialogTitle(props: { id: string; children?: ReactNode; onClose?: () => void }) {
 	const { children, onClose, ...other } = props;
 
 	return (
@@ -64,5 +70,44 @@ function CreateNewClientDialogTitle(props: { id: string; children?: React.ReactN
 				</IconButton>
 			) : null}
 		</DialogTitle>
+	);
+}
+
+const steps = ['Personal Details', 'Contact Details'];
+
+function FormStepper() {
+	const [activeStep, setActiveStep] = useState(0);
+
+	const handleNext = () => {
+		setActiveStep((prevActiveStep) => prevActiveStep + 1);
+	};
+
+	const handleBack = () => {
+		setActiveStep((prevActiveStep) => prevActiveStep - 1);
+	};
+
+	return (
+		<Box sx={{ width: '100%' }}>
+			<Stepper activeStep={activeStep}>
+				{steps.map((label) => {
+					const stepProps: { completed?: boolean } = {};
+					return (
+						<Step key={label} {...stepProps}>
+							<StepLabel>{label}</StepLabel>
+						</Step>
+					);
+				})}
+			</Stepper>
+			<Fragment>
+				<Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+				<Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+					<Button color='inherit' disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
+						Back
+					</Button>
+					<Box sx={{ flex: '1 1 auto' }} />
+					<Button onClick={handleNext}>{activeStep === steps.length - 1 ? 'Finish' : 'Next'}</Button>
+				</Box>
+			</Fragment>
+		</Box>
 	);
 }

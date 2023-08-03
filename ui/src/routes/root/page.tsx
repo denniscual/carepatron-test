@@ -34,6 +34,7 @@ export default function Root() {
 						Create New Client
 					</Button>
 					<CreateNewClientDialog
+						maxWidth='sm'
 						open={open}
 						onClose={() => setOpen(false)}
 						aria-labelledby='create-new-client-dialog-title'
