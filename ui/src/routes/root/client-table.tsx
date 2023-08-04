@@ -8,6 +8,21 @@ import Paper from '@mui/material/Paper';
 import { Fragment, forwardRef } from 'react';
 import { TableVirtuoso, TableComponents } from 'react-virtuoso';
 
+const columns = [
+	{
+		dataKey: 'name',
+		label: 'Name',
+	},
+	{
+		dataKey: 'phoneNumber',
+		label: 'Phone Number',
+	},
+	{
+		dataKey: 'email',
+		label: 'Email',
+	},
+];
+
 export default function ClientTable({ clients }: { clients: IClient[] }) {
 	return (
 		<Paper style={{ height: 450, width: '100%' }}>
@@ -75,18 +90,3 @@ const VirtuosoTableComponents: TableComponents<IClient> = {
 		);
 	},
 };
-
-const columns = [
-	{
-		dataKey: 'name',
-		label: 'Name',
-	},
-	{
-		dataKey: 'phoneNumber',
-		label: 'Phone Number',
-	},
-	{
-		dataKey: 'email',
-		label: 'Email',
-	},
-];

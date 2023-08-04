@@ -1,6 +1,6 @@
 import { ActionFunction, LoaderFunction, redirect, useLoaderData } from 'react-router-dom';
 import { Button, Paper, Stack, Typography } from '@mui/material';
-import ClientTable from './ClientTable';
+import ClientTable from './client-table';
 import { createClient, getClients } from 'services/api';
 import { useDeferredValue, useState } from 'react';
 import { generateId, searchItems } from 'lib/utils';
