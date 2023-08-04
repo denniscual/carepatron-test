@@ -16,7 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { ChangeEventHandler, ElementRef, ReactNode, useEffect, useRef, useState } from 'react';
 import { TextField } from 'components/ui/textfield';
-import { ActionFunction, redirect, useFormAction, useSubmit } from 'react-router-dom';
+import { ActionFunction, redirect, useFormAction, useNavigate, useSubmit } from 'react-router-dom';
 import { createFormData, generateId } from 'lib/utils';
 import { FORM_FIELD_ERROR_MESSAGES } from 'lib/validation-message';
 import { Client } from 'lib/types';
@@ -45,9 +45,11 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function NewClient() {
 	const [open, setOpen] = useState(true);
+	const navigate = useNavigate();
 
 	function onClose() {
 		setOpen(false);
+		navigate('clients');
 	}
 
 	return (
