@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { ChangeEventHandler, ComponentProps, ReactNode, useState } from 'react';
+import { ChangeEventHandler, ComponentProps, ElementRef, ReactNode, useEffect, useRef, useState } from 'react';
 import { TextField } from 'components/ui/textfield';
 import { useFormAction, useSubmit } from 'react-router-dom';
 import { createFormData } from 'lib/utils';
@@ -216,6 +216,7 @@ const formContentSteps: {
 				id: 'email-textfield',
 				name: 'email',
 				label: 'Email',
+				autoFocus: true,
 			},
 			{
 				id: 'phoneNumber-textfield',
@@ -255,12 +256,18 @@ function FormContent({
 	onChange?: ChangeEventHandler;
 	formFields: FormField[];
 }) {
+	const inputRef = useRef<ElementRef<'input'>>(null);
+	useEffect(() => {
+		inputRef.current?.focus();
+	}, []);
+
 	return (
 		<Stack gap={2}>
-			{formFields.map(({ name, ...input }, idx) => (
+			{formFields.map(({ name, ...textField }) => (
 				<TextField
+					ref={textField.autoFocus ? inputRef : null}
 					key={name}
-					{...input}
+					{...textField}
 					name={name}
 					size='small'
 					onChange={onChange}

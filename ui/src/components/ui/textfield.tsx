@@ -19,7 +19,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(({ label, 
 			>
 				{label}
 			</InputLabel>
-			<OutlinedInput id={id} ref={ref} {...props} />
+			<OutlinedInput inputRef={ref} id={id} {...props} />
 			{!!error && <FormHelperText id='component-error-text'>{error}</FormHelperText>}
 		</FormControl>
 	);
