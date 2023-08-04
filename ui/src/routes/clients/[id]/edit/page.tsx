@@ -1,7 +1,7 @@
 import { Button, Stack } from '@mui/material';
 import { TextField } from 'components/ui/textfield';
 import { Client } from 'lib/types';
-import { ERROR_MESSAGES } from 'lib/error-message';
+import { ERROR_MESSAGES } from 'lib/error-messages';
 import { ActionFunction, Form, redirect, useActionData, useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { updateClient } from 'services/api';
 import { LoaderData } from '../layout';

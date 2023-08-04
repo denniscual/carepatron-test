@@ -18,7 +18,7 @@ import { ChangeEventHandler, ComponentProps, ElementRef, ReactNode, useEffect, u
 import { TextField } from 'components/ui/textfield';
 import { useFormAction, useSubmit } from 'react-router-dom';
 import { createFormData } from 'lib/utils';
-import { ERROR_MESSAGES } from 'lib/error-message';
+import { ERROR_MESSAGES } from 'lib/error-messages';
 import { Client } from 'lib/types';
 
 type ClientWithoutId = Omit<Client, 'id'>;
