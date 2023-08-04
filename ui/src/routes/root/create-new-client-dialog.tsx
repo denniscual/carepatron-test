@@ -30,7 +30,7 @@ export default function CreateNewClientDialog({
 	return (
 		<Dialog {...props} onClose={onClose}>
 			<CreateNewClientDialogTitle onClose={onClose} id='create-new-client-dialog-title'>
-				Create New ClienWithoutIdt
+				Create New Client
 			</CreateNewClientDialogTitle>
 			<CreateNewClientDialogContent onNextFormContent={onClose} />
 		</Dialog>
@@ -139,7 +139,7 @@ function CreateNewClientDialogContent({ onNextFormContent }: { onNextFormContent
 					Back
 				</Button>
 				<Button variant='contained' onClick={handleNextFormContent}>
-					{activeFormContentStep === formContentSteps.length - 1 ? 'Create ClientWithoutId' : 'Continue'}
+					{activeFormContentStep === formContentSteps.length - 1 ? 'Create Client' : 'Continue'}
 				</Button>
 			</DialogActions>
 		</>
