@@ -16,28 +16,18 @@ const router = createBrowserRouter([
 			},
 			{
 				path: 'clients',
-				children: [
-					{
-						index: true,
-						element: <Clients />,
-						loader: clientsLoader,
-						action: clientsAction,
-					},
-					{
-						path: ':id',
-						children: [
-							{
-								index: true,
-								element: <Client />,
-								loader: clientLoader,
-							},
-							{
-								path: 'destroy',
-								action: clientDestroyAction,
-							},
-						],
-					},
-				],
+				element: <Clients />,
+				loader: clientsLoader,
+				action: clientsAction,
+			},
+			{
+				path: 'clients/:id',
+				element: <Client />,
+				loader: clientLoader,
+			},
+			{
+				path: 'clients/:id/destroy',
+				action: clientDestroyAction,
 			},
 		],
 	},
