@@ -17,22 +17,19 @@ export const loader: LoaderFunction = async ({ request }) => {
 	const clients = await getClients();
 	const url = new URL(request.url);
 	const q = url.searchParams.get('q') ?? '';
+	const filteredClients = searchItems(clients, q, ['firstName', 'lastName']);
 	return {
-		clients,
+		clients: filteredClients,
 		q,
 	};
 };
 
 export default function Root() {
 	const { clients, q } = useLoaderData() as LoaderData;
-	// NOTE: When dealing with huge volume of clients, its good to memoize the computation using `useMemo`.
-	// But this will only be effective if the `loader` updates the reference in ideal way.
-	// Let say, if the user didn't intent to change the `clients`, then loader should return same reference.
-	const filteredClients = searchItems(clients, q, ['firstName', 'lastName']);
 	// Defer the rendering of the Component that is relying to this data, in this case `ClientTable`, using Transition API.
 	// Behind the scene, React will put lower priority to the depended Components. In this way, React can prioritize work that
 	// has higher priority level like "user input". Using Transition API, main thread performance becomes effecient.
-	const deferredClients = useDeferredValue(filteredClients);
+	const deferredClients = useDeferredValue(clients);
 	const navigate = useNavigate();
 
 	return (
