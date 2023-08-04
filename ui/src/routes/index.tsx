@@ -2,9 +2,9 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootLayout from './root/layout';
 import Root from './root/page';
 import Clients, { loader as clientsLoader, action as clientsAction } from './clients/page';
-import Client, { loader as clientLoader } from './clients/[id]/page';
+import ClientLayout, { loader as clientLayoutLoader } from './clients/[id]/layout';
+import Client from './clients/[id]/page';
 import { action as clientDestroyAction } from './clients/[id]/destroy.action';
-import ClientLayout from './clients/[id]/layout';
 import EditClient, { action as editClientAction } from './clients/[id]/edit/page';
 
 const router = createBrowserRouter([
@@ -23,13 +23,14 @@ const router = createBrowserRouter([
 				action: clientsAction,
 			},
 			{
+				id: 'client',
 				path: 'clients/:id',
 				element: <ClientLayout />,
+				loader: clientLayoutLoader,
 				children: [
 					{
 						index: true,
 						element: <Client />,
-						loader: clientLoader,
 					},
 					{
 						path: 'edit',
@@ -37,7 +38,7 @@ const router = createBrowserRouter([
 						action: editClientAction,
 					},
 					{
-						path: 'clients/:id/destroy',
+						path: 'destroy',
 						action: clientDestroyAction,
 					},
 				],

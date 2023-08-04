@@ -1,30 +1,9 @@
 import { Button, Stack, Typography } from '@mui/material';
-import { LoaderFunction, useLoaderData, useNavigate } from 'react-router-dom';
-import { getClient } from 'services/api';
-import { Client } from 'lib/types';
-
-type LoaderData = { client: Client };
-
-export const loader: LoaderFunction = async ({ params }) => {
-	try {
-		// In real-world app, you should use caching to efficiently handle the server state. E.g tools are react-query and useSwr.
-		const { id } = params;
-
-		if (!id) {
-			throw new Error('Client Id must be provided.');
-		}
-
-		const client = await getClient(id);
-		return {
-			client,
-		};
-	} catch (err) {
-		throw err;
-	}
-};
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { LoaderData } from './layout';
 
 export default function ClientDetails() {
-	const { client } = useLoaderData() as LoaderData;
+	const { client } = useRouteLoaderData('client') as LoaderData;
 	const navigate = useNavigate();
 
 	return (

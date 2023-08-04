@@ -29,12 +29,12 @@ export const loader: LoaderFunction = async () => {
 export const action: ActionFunction = async ({ request }) => {
 	try {
 		const formData = await request.formData();
-		const newClient = {
+		const values = {
 			...Object.fromEntries(formData),
 			id: generateId(),
 		} as Client;
 
-		await createClient(newClient);
+		await createClient(values);
 		return redirect('');
 	} catch (err) {
 		throw err;
