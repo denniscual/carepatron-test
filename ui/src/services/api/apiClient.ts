@@ -6,8 +6,8 @@ export function apiGet<T>(uri: string): Promise<T> {
 	return api<T>(uri, 'get', undefined);
 }
 
-export function apiDelete<T>(uri: string): Promise<T> {
-	return api<T>(uri, 'delete');
+export function apiDelete<T>(uri: string, id: string): Promise<T> {
+	return api<T>(`${uri}/${id}`, 'delete');
 }
 
 export function apiPost<T>(uri: string, data: any, onUploadProgress?: (progressEvent: any) => void): Promise<T> {

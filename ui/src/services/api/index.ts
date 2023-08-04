@@ -12,3 +12,7 @@ export const createClient = (client: Client): Promise<void> => {
 export const updateClient = (client: Client): Promise<void> => {
 	return apiClient.put<void>('clients', client);
 };
+
+export const deleteClient = (id: Client['id']): Promise<void> => {
+	return apiClient.delete<void>('clients', id);
+};

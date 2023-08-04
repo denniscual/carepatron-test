@@ -45,3 +45,11 @@ app.put('/clients/:id', (req: Request, res: Response) => {
 
 	res.status(204);
 });
+
+// delete client
+app.delete('/clients/:id', (req: Request, res: Response) => {
+	const id = req.params.id;
+	removeClient(id);
+
+	res.status(204);
+});
