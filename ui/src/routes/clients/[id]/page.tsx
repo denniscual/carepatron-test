@@ -25,13 +25,15 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function ClientDetails() {
 	const { client } = useLoaderData() as LoaderData;
-	console.log({ client });
 
 	return (
-		<Stack gap={4}>
-			<Typography variant='h1' sx={{ textAlign: 'start', fontSize: 'h4.fontSize' }} fontWeight={600}>
-				Client
-			</Typography>
+		<Stack>
+			<Stack gap={1}>
+				<Typography variant='h1' sx={{ fontSize: 'h5.fontSize' }} fontWeight={600}>
+					{client.firstName} {client.lastName}
+				</Typography>
+				<Typography variant='body1'>{client.email}</Typography>
+			</Stack>
 		</Stack>
 	);
 }

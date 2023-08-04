@@ -1,14 +1,15 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Layout from './layout';
+import RootLayout from './root/layout';
 import Root from './root/page';
 import Clients, { loader as clientsLoader, action as clientsAction } from './clients/page';
 import Client, { loader as clientLoader } from './clients/[id]/page';
 import { action as clientDestroyAction } from './clients/[id]/destroy.action';
+import ClientLayout from './clients/[id]/layout';
 
 const router = createBrowserRouter([
 	{
 		path: '/',
-		element: <Layout />,
+		element: <RootLayout />,
 		children: [
 			{
 				index: true,
@@ -22,12 +23,18 @@ const router = createBrowserRouter([
 			},
 			{
 				path: 'clients/:id',
-				element: <Client />,
-				loader: clientLoader,
-			},
-			{
-				path: 'clients/:id/destroy',
-				action: clientDestroyAction,
+				element: <ClientLayout />,
+				children: [
+					{
+						index: true,
+						element: <Client />,
+						loader: clientLoader,
+					},
+					{
+						path: 'clients/:id/destroy',
+						action: clientDestroyAction,
+					},
+				],
 			},
 		],
 	},

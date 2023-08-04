@@ -3,15 +3,14 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import TableRow, { TableRowProps } from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Fragment, forwardRef } from 'react';
 import { TableVirtuoso, TableComponents } from 'react-virtuoso';
 import { Client } from 'lib/types';
-import { IconButton, Stack } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import DeleteClient from './delete-client';
+import { Stack } from '@mui/material';
 
 const columns = [
 	{
@@ -53,7 +52,6 @@ function rowContent(_index: number, row: Client) {
 					return (
 						<TableCell key={dataKey}>
 							<Stack direction='row' rowGap={2} justifyContent='space-evenly' alignItems='center'>
-								<EditLink path={row.id} />
 								<DeleteClient clientId={row.id} />
 							</Stack>
 						</TableCell>
@@ -83,16 +81,6 @@ function rowContent(_index: number, row: Client) {
 	);
 }
 
-function EditLink({ path }: { path: string }) {
-	const navigate = useNavigate();
-
-	return (
-		<IconButton aria-label='delete' size='small' onClick={() => navigate(path)}>
-			<EditIcon fontSize='inherit' />
-		</IconButton>
-	);
-}
-
 function fixedHeaderContent() {
 	return (
 		<TableRow>
@@ -113,13 +101,29 @@ function fixedHeaderContent() {
 	);
 }
 
+function ClientTableRow({ item, ...props }: TableRowProps & { item: Client }) {
+	const navigate = useNavigate();
+	return (
+		<TableRow
+			sx={{
+				cursor: 'pointer',
+				'&:nth-of-type(odd)': {
+					bgcolor: '#f2f4f7',
+				},
+			}}
+			{...props}
+			onClick={() => navigate(item.id)}
+		/>
+	);
+}
+
 const VirtuosoTableComponents: TableComponents<Client> = {
 	Scroller: forwardRef<HTMLDivElement>((props, ref) => <TableContainer component={Paper} {...props} ref={ref} />),
 	Table: (props) => (
 		<Table {...props} sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} aria-label='Client Table' />
 	),
 	TableHead,
-	TableRow,
+	TableRow: ClientTableRow,
 	TableBody: forwardRef<HTMLTableSectionElement>((props, ref) => <TableBody {...props} ref={ref} />),
 	EmptyPlaceholder: function EmptyPlaceholder() {
 		return (
