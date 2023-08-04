@@ -14,55 +14,30 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { ChangeEventHandler, ElementRef, ReactNode, useEffect, useRef, useState } from 'react';
+import { ChangeEventHandler, ComponentProps, ElementRef, ReactNode, useEffect, useRef, useState } from 'react';
 import { TextField } from 'components/ui/textfield';
-import { ActionFunction, redirect, useFormAction, useNavigate, useSubmit } from 'react-router-dom';
-import { createFormData, generateId } from 'lib/utils';
+import { useFormAction, useSubmit } from 'react-router-dom';
+import { createFormData } from 'lib/utils';
 import { FORM_FIELD_ERROR_MESSAGES } from 'lib/validation-message';
 import { Client } from 'lib/types';
-import { createClient } from 'services/api';
 
 type ClientWithoutId = Omit<Client, 'id'>;
 
-/**
- * Do an action once the user submits a form action like POST, UPDATE, etc. The action will run if the route segment matches the URL path.
- * After the action completes, the data on the page is revalidated to capture any mutations that may have happened,
- * automatically keeping your UI in sync with your server state
- */
-export const action: ActionFunction = async ({ request }) => {
-	try {
-		const formData = await request.formData();
-		const newClient = {
-			...Object.fromEntries(formData),
-			id: generateId(),
-		} as Client;
-		await createClient(newClient);
-		return redirect('/clients');
-	} catch (err) {
-		throw err;
-	}
-};
-
-export default function NewClient() {
-	const [open, setOpen] = useState(true);
-	const navigate = useNavigate();
-
-	function onClose() {
-		setOpen(false);
-		navigate('clients');
-	}
-
+export default function CreateNewClientDialog({
+	onClose,
+	...props
+}: Omit<ComponentProps<typeof Dialog>, 'onClose'> & { onClose?: () => void }) {
 	return (
-		<Dialog open={open} onClose={onClose} aria-labelledby='new-client-dialog-title' maxWidth='sm'>
-			<NewClientDialogTitle onClose={onClose} id='new-client-dialog-title'>
+		<Dialog {...props} onClose={onClose}>
+			<CreateNewClientDialogTitle onClose={onClose} id='create-new-client-dialog-title'>
 				Create New Client
-			</NewClientDialogTitle>
-			<NewClientDialogContent onNextFormContent={onClose} />
+			</CreateNewClientDialogTitle>
+			<CreateNewClientDialogContent onNextFormContent={onClose} />
 		</Dialog>
 	);
 }
 
-function NewClientDialogTitle(props: { id: string; children?: ReactNode; onClose?: () => void }) {
+function CreateNewClientDialogTitle(props: { id: string; children?: ReactNode; onClose?: () => void }) {
 	const { children, onClose, ...other } = props;
 
 	return (
@@ -83,7 +58,7 @@ function NewClientDialogTitle(props: { id: string; children?: ReactNode; onClose
 	);
 }
 
-function NewClientDialogContent({ onNextFormContent }: { onNextFormContent?: () => void }) {
+function CreateNewClientDialogContent({ onNextFormContent }: { onNextFormContent?: () => void }) {
 	// For form
 	const [formFieldValues, setFormFieldValues] = useState<ClientWithoutId>({
 		firstName: '',
@@ -117,8 +92,8 @@ function NewClientDialogContent({ onNextFormContent }: { onNextFormContent?: () 
 
 		// If the user is on the last step, submit an action.
 		if (activeFormContentStep === formContentSteps.length - 1) {
-			onNextFormContent?.();
 			submitForm(createFormData(formFieldValues), { action: formAction, method: 'POST' });
+			onNextFormContent?.();
 			return;
 		}
 
