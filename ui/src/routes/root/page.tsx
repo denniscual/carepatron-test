@@ -1,5 +1,5 @@
 import { ActionFunction, LoaderFunction, redirect, useLoaderData } from 'react-router-dom';
-import { Button, Paper, Stack, Typography } from '@mui/material';
+import { Button, Paper, Stack, Typography, styled } from '@mui/material';
 import ClientTable from './client-table';
 import { createClient, getClients } from 'services/api';
 import { useDeferredValue, useState } from 'react';
@@ -66,10 +66,10 @@ export default function Root() {
 				Clients
 			</Typography>
 			<Stack gap={3.5}>
-				<Stack direction='row' justifyContent='space-between'>
+				<SearchbarContainer>
 					<SearchBar query={q} />
 					<CreateNewClientDialogButtonTrigger />
-				</Stack>
+				</SearchbarContainer>
 				<Paper>
 					<ClientTable clients={deferredClients} />
 				</Paper>
@@ -77,6 +77,16 @@ export default function Root() {
 		</Stack>
 	);
 }
+
+const SearchbarContainer = styled('div')(({ theme }) => ({
+	display: 'flex',
+	flexDirection: 'column',
+	rowGap: theme.spacing(2),
+	[theme.breakpoints.up('sm')]: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+}));
 
 function CreateNewClientDialogButtonTrigger() {
 	const [open, setOpen] = useState(false);

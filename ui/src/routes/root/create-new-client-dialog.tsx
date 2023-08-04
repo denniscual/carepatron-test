@@ -10,6 +10,7 @@ import {
 	Step,
 	StepLabel,
 	Stepper,
+	styled,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -111,15 +112,10 @@ function CreateNewClientDialogContent({ onNextFormContent }: { onNextFormContent
 	return (
 		<>
 			<DialogContent>
-				<Stack
-					gap={3}
-					sx={{
-						width: 500,
-					}}
-				>
+				<FormContentStepperContainer gap={3}>
 					<FormContentStepper activeStep={activeFormContentStep} />
 					{activeFormContent}
-				</Stack>
+				</FormContentStepperContainer>
 			</DialogContent>
 			<DialogActions
 				sx={{
@@ -148,9 +144,16 @@ function CreateNewClientDialogContent({ onNextFormContent }: { onNextFormContent
 	);
 }
 
+const FormContentStepperContainer = styled(Stack)(({ theme }) => ({
+	width: '100%',
+	[theme.breakpoints.up('sm')]: {
+		width: 500,
+	},
+}));
+
 function FormContentStepper({ activeStep }: { activeStep: number }) {
 	return (
-		<Box sx={{ width: 500 }}>
+		<Box>
 			<Stepper activeStep={activeStep}>
 				{formContentSteps.map((step) => {
 					const stepProps: { completed?: boolean } = {};

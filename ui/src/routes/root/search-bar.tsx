@@ -1,4 +1,4 @@
-import { InputAdornment, OutlinedInput } from '@mui/material';
+import { InputAdornment, OutlinedInput, styled } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { ElementRef, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,8 +15,7 @@ export default function SearchBar({ query }: { query: string }) {
 	}, [query]);
 
 	return (
-		<OutlinedInput
-			sx={{ width: '35ch' }}
+		<SearcbarOutlinedInput
 			size='small'
 			inputRef={searchRef}
 			type='search'
@@ -41,3 +40,10 @@ export default function SearchBar({ query }: { query: string }) {
 		/>
 	);
 }
+
+const SearcbarOutlinedInput = styled(OutlinedInput)(({ theme }) => ({
+	width: '100%',
+	[theme.breakpoints.up('sm')]: {
+		width: '35ch',
+	},
+}));
