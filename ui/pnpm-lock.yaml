@@ -49,6 +49,9 @@ dependencies:
   react-scripts:
     specifier: 5.0.1
     version: 5.0.1(@babel/plugin-syntax-flow@7.18.6)(@babel/plugin-transform-react-jsx@7.18.6)(eslint@8.20.0)(react@18.2.0)(typescript@4.7.4)
+  react-virtuoso:
+    specifier: ^4.4.2
+    version: 4.4.2(react-dom@18.2.0)(react@18.2.0)
   typescript:
     specifier: ^4.7.4
     version: 4.7.4
@@ -8554,6 +8557,17 @@ packages:
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /react-virtuoso@4.4.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-9uChSRSK5bTbKTxzuta4RqhfrlZSVHI/v8fHwmv3jmImS8FjdZ4Mzgqz9JKUp/yQo3dIHkR2QwidQeqxgYzPhQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16 || >=17 || >= 18'
+      react-dom: '>=16 || >=17 || >= 18'
+    dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
