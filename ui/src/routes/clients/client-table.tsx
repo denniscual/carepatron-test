@@ -8,6 +8,10 @@ import Paper from '@mui/material/Paper';
 import { Fragment, forwardRef } from 'react';
 import { TableVirtuoso, TableComponents } from 'react-virtuoso';
 import { Client } from 'lib/types';
+import { IconButton, Stack } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate } from 'react-router-dom';
 
 const columns = [
 	{
@@ -21,6 +25,10 @@ const columns = [
 	{
 		dataKey: 'email',
 		label: 'Email',
+	},
+	{
+		dataKey: 'actions',
+		label: '',
 	},
 ];
 
@@ -41,7 +49,19 @@ function rowContent(_index: number, row: Client) {
 	return (
 		<Fragment>
 			{columns.map(({ dataKey }) => {
-				const value = row[dataKey as keyof Client];
+				if (dataKey === 'actions') {
+					return (
+						<TableCell key={dataKey}>
+							<Stack direction='row' rowGap={2} justifyContent='space-evenly' alignItems='center'>
+								<EditLink path={row.id} />
+								<IconButton aria-label='delete' size='small' color='error'>
+									<DeleteIcon fontSize='inherit' />
+								</IconButton>
+							</Stack>
+						</TableCell>
+					);
+				}
+
 				if (dataKey === 'name') {
 					return (
 						<TableCell
@@ -57,9 +77,21 @@ function rowContent(_index: number, row: Client) {
 						</TableCell>
 					);
 				}
+
+				const value = row[dataKey as keyof Client];
 				return <TableCell key={dataKey}>{value}</TableCell>;
 			})}
 		</Fragment>
+	);
+}
+
+function EditLink({ path }: { path: string }) {
+	const navigate = useNavigate();
+
+	return (
+		<IconButton aria-label='delete' size='small' onClick={() => navigate(path)}>
+			<EditIcon fontSize='inherit' />
+		</IconButton>
 	);
 }
 
@@ -73,6 +105,7 @@ function fixedHeaderContent() {
 					sx={{
 						fontWeight: 'bold',
 						backgroundColor: 'white',
+						'&:last-child': { width: 70 },
 					}}
 				>
 					{column.label}

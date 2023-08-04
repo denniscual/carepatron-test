@@ -52,22 +52,20 @@ export default function Root() {
 	const deferredClients = useDeferredValue(clients);
 
 	return (
-		<>
-			<Stack gap={4}>
-				<Typography variant='h1' sx={{ textAlign: 'start', fontSize: 'h4.fontSize' }} fontWeight={600}>
-					Clients
-				</Typography>
-				<Stack gap={3.5}>
-					<SearchbarContainer>
-						<SearchBar query={q} />
-						<CreateNewClientDialogButtonTrigger />
-					</SearchbarContainer>
-					<Paper>
-						<ClientTable clients={deferredClients} />
-					</Paper>
-				</Stack>
+		<Stack gap={4}>
+			<Typography variant='h1' sx={{ textAlign: 'start', fontSize: 'h4.fontSize' }} fontWeight={600}>
+				Clients
+			</Typography>
+			<Stack gap={3.5}>
+				<SearchbarContainer>
+					<SearchBar query={q} />
+					<CreateNewClientDialogButtonTrigger />
+				</SearchbarContainer>
+				<Paper>
+					<ClientTable clients={deferredClients} />
+				</Paper>
 			</Stack>
-		</>
+		</Stack>
 	);
 }
 
