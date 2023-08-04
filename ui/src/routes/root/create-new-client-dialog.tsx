@@ -169,6 +169,7 @@ type FormField = {
 	id: string;
 	name: keyof Client;
 	label: string;
+	autoFocus?: boolean;
 };
 
 const formContentSteps: {
@@ -185,6 +186,7 @@ const formContentSteps: {
 				id: 'firstName-textfield',
 				name: 'firstName',
 				label: 'First name',
+				autoFocus: true,
 			},
 			{
 				id: 'lastName-textfield',
@@ -255,7 +257,7 @@ function FormContent({
 }) {
 	return (
 		<Stack gap={2}>
-			{formFields.map(({ name, ...input }) => (
+			{formFields.map(({ name, ...input }, idx) => (
 				<TextField
 					key={name}
 					{...input}
