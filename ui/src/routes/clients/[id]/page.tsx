@@ -1,5 +1,5 @@
-import { Stack, Typography } from '@mui/material';
-import { LoaderFunction, useLoaderData } from 'react-router-dom';
+import { Button, Stack, Typography } from '@mui/material';
+import { LoaderFunction, useLoaderData, useNavigate } from 'react-router-dom';
 import { getClient } from 'services/api';
 import { Client } from 'lib/types';
 
@@ -25,14 +25,24 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function ClientDetails() {
 	const { client } = useLoaderData() as LoaderData;
+	const navigate = useNavigate();
 
 	return (
-		<Stack>
-			<Stack gap={1}>
+		<Stack gap={2}>
+			<div>
 				<Typography variant='h1' sx={{ fontSize: 'h5.fontSize' }} fontWeight={600}>
 					{client.firstName} {client.lastName}
 				</Typography>
 				<Typography variant='body1'>{client.email}</Typography>
+				<Typography variant='body1'>{client.phoneNumber}</Typography>
+			</div>
+			<Stack direction='row' gap={1.5}>
+				<Button variant='outlined' size='small' onClick={() => navigate('edit')}>
+					Edit
+				</Button>
+				<Button variant='outlined' color='error' size='small'>
+					Delete
+				</Button>
 			</Stack>
 		</Stack>
 	);
