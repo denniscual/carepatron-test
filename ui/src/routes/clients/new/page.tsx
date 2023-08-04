@@ -53,16 +53,16 @@ export default function NewClient() {
 	}
 
 	return (
-		<Dialog open={open} onClose={onClose} aria-labelledby='create-new-client-dialog-title' maxWidth='sm'>
-			<CreateNewClientDialogTitle onClose={onClose} id='create-new-client-dialog-title'>
+		<Dialog open={open} onClose={onClose} aria-labelledby='new-client-dialog-title' maxWidth='sm'>
+			<NewClientDialogTitle onClose={onClose} id='new-client-dialog-title'>
 				Create New Client
-			</CreateNewClientDialogTitle>
-			<CreateNewClientDialogContent onNextFormContent={onClose} />
+			</NewClientDialogTitle>
+			<NewClientDialogContent onNextFormContent={onClose} />
 		</Dialog>
 	);
 }
 
-function CreateNewClientDialogTitle(props: { id: string; children?: ReactNode; onClose?: () => void }) {
+function NewClientDialogTitle(props: { id: string; children?: ReactNode; onClose?: () => void }) {
 	const { children, onClose, ...other } = props;
 
 	return (
@@ -83,7 +83,7 @@ function CreateNewClientDialogTitle(props: { id: string; children?: ReactNode; o
 	);
 }
 
-function CreateNewClientDialogContent({ onNextFormContent }: { onNextFormContent?: () => void }) {
+function NewClientDialogContent({ onNextFormContent }: { onNextFormContent?: () => void }) {
 	// For form
 	const [formFieldValues, setFormFieldValues] = useState<ClientWithoutId>({
 		firstName: '',
