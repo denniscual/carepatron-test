@@ -19,8 +19,9 @@ import { TextField } from 'components/ui/textfield';
 import { useFormAction, useSubmit } from 'react-router-dom';
 import { createFormData } from 'lib/utils';
 import { FORM_FIELD_ERROR_MESSAGES } from 'lib/validation-message';
+import { Client } from 'lib/types';
 
-type Client = Omit<IClient, 'id'>;
+type ClientWithoutId = Omit<Client, 'id'>;
 
 export default function CreateNewClientDialog({
 	onClose,
@@ -29,7 +30,7 @@ export default function CreateNewClientDialog({
 	return (
 		<Dialog {...props} onClose={onClose}>
 			<CreateNewClientDialogTitle onClose={onClose} id='create-new-client-dialog-title'>
-				Create New Client
+				Create New ClienWithoutIdt
 			</CreateNewClientDialogTitle>
 			<CreateNewClientDialogContent onNextFormContent={onClose} />
 		</Dialog>
@@ -59,7 +60,7 @@ function CreateNewClientDialogTitle(props: { id: string; children?: ReactNode; o
 
 function CreateNewClientDialogContent({ onNextFormContent }: { onNextFormContent?: () => void }) {
 	// For form
-	const [formFieldValues, setFormFieldValues] = useState<Client>({
+	const [formFieldValues, setFormFieldValues] = useState<ClientWithoutId>({
 		firstName: '',
 		lastName: '',
 		email: '',
@@ -138,7 +139,7 @@ function CreateNewClientDialogContent({ onNextFormContent }: { onNextFormContent
 					Back
 				</Button>
 				<Button variant='contained' onClick={handleNextFormContent}>
-					{activeFormContentStep === formContentSteps.length - 1 ? 'Create Client' : 'Continue'}
+					{activeFormContentStep === formContentSteps.length - 1 ? 'Create ClientWithoutId' : 'Continue'}
 				</Button>
 			</DialogActions>
 		</>
@@ -171,7 +172,7 @@ function FormContentStepper({ activeStep }: { activeStep: number }) {
 
 type FormField = {
 	id: string;
-	name: keyof Client;
+	name: keyof ClientWithoutId;
 	label: string;
 	autoFocus?: boolean;
 };
@@ -180,7 +181,7 @@ const formContentSteps: {
 	label: string;
 	value: string;
 	formFields: FormField[];
-	validateFormFieldValues: (values: Client) => Record<string, string>;
+	validateFormFieldValues: (values: ClientWithoutId) => Record<string, string>;
 }[] = [
 	{
 		label: 'Personal Details',
@@ -198,7 +199,7 @@ const formContentSteps: {
 				label: 'Last name',
 			},
 		],
-		validateFormFieldValues(values: Client) {
+		validateFormFieldValues(values: ClientWithoutId) {
 			const errors: Record<string, string> = {};
 			if (values.firstName === '') {
 				errors.firstName = FORM_FIELD_ERROR_MESSAGES.required;
@@ -228,7 +229,7 @@ const formContentSteps: {
 				label: 'Phone number',
 			},
 		],
-		validateFormFieldValues(values: Client) {
+		validateFormFieldValues(values: ClientWithoutId) {
 			const errors: Record<string, string> = {};
 			if (values.email === '') {
 				errors.email = FORM_FIELD_ERROR_MESSAGES.required;

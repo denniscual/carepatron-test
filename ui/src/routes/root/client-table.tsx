@@ -7,6 +7,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Fragment, forwardRef } from 'react';
 import { TableVirtuoso, TableComponents } from 'react-virtuoso';
+import { Client } from 'lib/types';
 
 const columns = [
 	{
@@ -23,7 +24,7 @@ const columns = [
 	},
 ];
 
-export default function ClientTable({ clients }: { clients: IClient[] }) {
+export default function ClientTable({ clients }: { clients: Client[] }) {
 	return (
 		<Paper style={{ height: 450, width: '100%' }}>
 			<TableVirtuoso
@@ -36,11 +37,11 @@ export default function ClientTable({ clients }: { clients: IClient[] }) {
 	);
 }
 
-function rowContent(_index: number, row: IClient) {
+function rowContent(_index: number, row: Client) {
 	return (
 		<Fragment>
 			{columns.map(({ dataKey }) => {
-				const value = row[dataKey as keyof IClient];
+				const value = row[dataKey as keyof Client];
 				if (dataKey === 'name') {
 					return (
 						<TableCell
@@ -81,7 +82,7 @@ function fixedHeaderContent() {
 	);
 }
 
-const VirtuosoTableComponents: TableComponents<IClient> = {
+const VirtuosoTableComponents: TableComponents<Client> = {
 	Scroller: forwardRef<HTMLDivElement>((props, ref) => <TableContainer component={Paper} {...props} ref={ref} />),
 	Table: (props) => (
 		<Table {...props} sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} aria-label='Client Table' />

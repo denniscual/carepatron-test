@@ -6,8 +6,9 @@ import { useDeferredValue, useState } from 'react';
 import { generateId, searchItems } from 'lib/utils';
 import SearchBar from './search-bar';
 import CreateNewClientDialog from './create-new-client-dialog';
+import { Client } from 'lib/types';
 
-type LoaderData = { clients: IClient[]; q: string };
+type LoaderData = { clients: Client[]; q: string };
 
 /**
  * Load the data once the route segment matches the URL path.
@@ -34,7 +35,7 @@ export const action: ActionFunction = async ({ request }) => {
 		const newClient = {
 			...Object.fromEntries(formData),
 			id: generateId(),
-		} as IClient;
+		} as Client;
 		switch (request.method) {
 			case 'POST': {
 				await createClient(newClient);
