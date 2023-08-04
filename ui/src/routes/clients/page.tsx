@@ -8,7 +8,7 @@ import SearchBar from './search-bar';
 import { Client } from 'lib/types';
 import CreateNewClientDialog from './create-new-client-dialog';
 
-type LoaderData = { clients: Client[]; q: string };
+type LoaderData = { clients: Client[] };
 
 /**
  * Load the data once the route segment matches the URL path.

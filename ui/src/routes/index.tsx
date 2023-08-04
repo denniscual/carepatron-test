@@ -2,7 +2,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Layout from './layout';
 import Root from './root/page';
 import Clients, { loader as clientsLoader, action as clientsAction } from './clients/page';
-import Client from './clients/[id]/page';
+import Client, { loader as clientLoader } from './clients/[id]/page';
 import { action as clientDestroyAction } from './clients/[id]/destroy.action';
 
 const router = createBrowserRouter([
@@ -29,6 +29,7 @@ const router = createBrowserRouter([
 							{
 								index: true,
 								element: <Client />,
+								loader: clientLoader,
 							},
 							{
 								path: 'destroy',

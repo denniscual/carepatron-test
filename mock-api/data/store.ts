@@ -35,3 +35,7 @@ export const listClients = () => {
 		return 0;
 	});
 };
+
+export const getClient = (id: IClient['id']) => {
+	return store.entities[id];
+};

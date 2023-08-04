@@ -5,6 +5,10 @@ export const getClients = (): Promise<Client[]> => {
 	return apiClient.get<Client[]>('clients');
 };
 
+export const getClient = (id: Client['id']): Promise<Client> => {
+	return apiClient.get<Client>(`clients/${id}`);
+};
+
 export const createClient = (client: Client): Promise<void> => {
 	return apiClient.post<void>('clients', client);
 };
