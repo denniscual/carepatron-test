@@ -18,6 +18,7 @@ import { ChangeEventHandler, ComponentProps, ElementRef, ReactNode, useEffect, u
 import { TextField } from 'components/ui/textfield';
 import { useFormAction, useSubmit } from 'react-router-dom';
 import { createFormData } from 'lib/utils';
+import { FORM_FIELD_ERROR_MESSAGES } from 'lib/validation-message';
 
 type Client = Omit<IClient, 'id'>;
 
@@ -200,10 +201,10 @@ const formContentSteps: {
 		validateFormFieldValues(values: Client) {
 			const errors: Record<string, string> = {};
 			if (values.firstName === '') {
-				errors.firstName = ERROR_MESSAGES.required;
+				errors.firstName = FORM_FIELD_ERROR_MESSAGES.required;
 			}
 			if (values.lastName === '') {
-				errors.lastName = ERROR_MESSAGES.required;
+				errors.lastName = FORM_FIELD_ERROR_MESSAGES.required;
 			}
 			if (Object.keys(errors).length) {
 				return errors;
@@ -230,10 +231,10 @@ const formContentSteps: {
 		validateFormFieldValues(values: Client) {
 			const errors: Record<string, string> = {};
 			if (values.email === '') {
-				errors.email = ERROR_MESSAGES.required;
+				errors.email = FORM_FIELD_ERROR_MESSAGES.required;
 			}
 			if (values.phoneNumber === '') {
-				errors.phoneNumber = ERROR_MESSAGES.required;
+				errors.phoneNumber = FORM_FIELD_ERROR_MESSAGES.required;
 			}
 			if (Object.keys(errors).length) {
 				return errors;
@@ -242,11 +243,6 @@ const formContentSteps: {
 		},
 	},
 ];
-
-const ERROR_MESSAGES = {
-	required: 'This field is required.',
-	invalidEmail: 'Invalid email.',
-};
 
 function FormContent({
 	values,

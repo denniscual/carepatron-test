@@ -7,7 +7,10 @@ export default function SearchBar({ query }: { query: string }) {
 	const searchRef = useRef<ElementRef<'input'>>(null);
 	const navigate = useNavigate();
 
-	// Synchronize input value with the URL Search Params
+	// Synchronize input value with the URL Search Params. We avoid making the Search input as Controlled Component
+	// because it wound end up with more complexity for the same behavior.
+	// You don't control the URL, the user does with the back/forward buttons.
+	// There would be more synchronization points with a controlled component.
 	useEffect(() => {
 		if (searchRef.current) {
 			searchRef.current.value = query;
