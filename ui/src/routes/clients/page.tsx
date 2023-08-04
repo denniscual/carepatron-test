@@ -1,11 +1,10 @@
-import { ActionFunction, LoaderFunction, redirect, useLoaderData } from 'react-router-dom';
+import { LoaderFunction, useLoaderData, useNavigate, Outlet } from 'react-router-dom';
 import { Button, Paper, Stack, Typography, styled } from '@mui/material';
 import ClientTable from './client-table';
-import { createClient, getClients } from 'services/api';
-import { useDeferredValue, useState } from 'react';
-import { generateId, searchItems } from 'lib/utils';
+import { getClients } from 'services/api';
+import { useDeferredValue } from 'react';
+import { searchItems } from 'lib/utils';
 import SearchBar from './search-bar';
-import CreateNewClientDialog from './create-new-client-dialog';
 import { Client } from 'lib/types';
 
 type LoaderData = { clients: Client[]; q: string };
@@ -24,32 +23,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 	};
 };
 
-/**
- * Do an action once the user submits a form action like POST, UPDATE, etc. The action will run if the route segment matches the URL path.
- * After the action completes, the data on the page is revalidated to capture any mutations that may have happened,
- * automatically keeping your UI in sync with your server state
- */
-export const action: ActionFunction = async ({ request }) => {
-	try {
-		const formData = await request.formData();
-		const newClient = {
-			...Object.fromEntries(formData),
-			id: generateId(),
-		} as Client;
-		switch (request.method) {
-			case 'POST': {
-				await createClient(newClient);
-				return redirect('/');
-			}
-			default: {
-				throw new Error('Unhandled action method.');
-			}
-		}
-	} catch (err) {
-		throw err;
-	}
-};
-
 export default function Root() {
 	const { clients, q } = useLoaderData() as LoaderData;
 	// NOTE: When dealing with huge volume of clients, its good to memoize the computation using `useMemo`.
@@ -60,22 +33,28 @@ export default function Root() {
 	// Behind the scene, React will put lower priority to the depended Components. In this way, React can prioritize work that
 	// has higher priority level like "user input". Using Transition API, main thread performance becomes effecient.
 	const deferredClients = useDeferredValue(filteredClients);
+	const navigate = useNavigate();
 
 	return (
-		<Stack gap={4}>
-			<Typography variant='h1' sx={{ textAlign: 'start', fontSize: 'h4.fontSize' }} fontWeight={600}>
-				Clients
-			</Typography>
-			<Stack gap={3.5}>
-				<SearchbarContainer>
-					<SearchBar query={q} />
-					<CreateNewClientDialogButtonTrigger />
-				</SearchbarContainer>
-				<Paper>
-					<ClientTable clients={deferredClients} />
-				</Paper>
+		<>
+			<Stack gap={4}>
+				<Typography variant='h1' sx={{ textAlign: 'start', fontSize: 'h4.fontSize' }} fontWeight={600}>
+					Clients
+				</Typography>
+				<Stack gap={3.5}>
+					<SearchbarContainer>
+						<SearchBar query={q} />
+						<Button variant='contained' onClick={() => navigate('new')}>
+							Create New Client
+						</Button>
+					</SearchbarContainer>
+					<Paper>
+						<ClientTable clients={deferredClients} />
+					</Paper>
+				</Stack>
 			</Stack>
-		</Stack>
+			<Outlet />
+		</>
 	);
 }
 
@@ -88,20 +67,3 @@ const SearchbarContainer = styled('div')(({ theme }) => ({
 		justifyContent: 'space-between',
 	},
 }));
-
-function CreateNewClientDialogButtonTrigger() {
-	const [open, setOpen] = useState(false);
-	return (
-		<>
-			<Button variant='contained' onClick={() => setOpen(true)}>
-				Create New Client
-			</Button>
-			<CreateNewClientDialog
-				maxWidth='sm'
-				open={open}
-				onClose={() => setOpen(false)}
-				aria-labelledby='create-new-client-dialog-title'
-			/>
-		</>
-	);
-}

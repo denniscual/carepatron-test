@@ -14,23 +14,46 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { ChangeEventHandler, ComponentProps, ElementRef, ReactNode, useEffect, useRef, useState } from 'react';
+import { ChangeEventHandler, ElementRef, ReactNode, useEffect, useRef, useState } from 'react';
 import { TextField } from 'components/ui/textfield';
-import { useFormAction, useSubmit } from 'react-router-dom';
-import { createFormData } from 'lib/utils';
+import { ActionFunction, redirect, useFormAction, useSubmit } from 'react-router-dom';
+import { createFormData, generateId } from 'lib/utils';
 import { FORM_FIELD_ERROR_MESSAGES } from 'lib/validation-message';
 import { Client } from 'lib/types';
+import { createClient } from 'services/api';
 
 type ClientWithoutId = Omit<Client, 'id'>;
 
-export default function CreateNewClientDialog({
-	onClose,
-	...props
-}: Omit<ComponentProps<typeof Dialog>, 'onClose'> & { onClose?: () => void }) {
+/**
+ * Do an action once the user submits a form action like POST, UPDATE, etc. The action will run if the route segment matches the URL path.
+ * After the action completes, the data on the page is revalidated to capture any mutations that may have happened,
+ * automatically keeping your UI in sync with your server state
+ */
+export const action: ActionFunction = async ({ request }) => {
+	try {
+		const formData = await request.formData();
+		const newClient = {
+			...Object.fromEntries(formData),
+			id: generateId(),
+		} as Client;
+		await createClient(newClient);
+		return redirect('/clients');
+	} catch (err) {
+		throw err;
+	}
+};
+
+export default function NewClient() {
+	const [open, setOpen] = useState(true);
+
+	function onClose() {
+		setOpen(false);
+	}
+
 	return (
-		<Dialog {...props} onClose={onClose}>
+		<Dialog open={open} onClose={onClose} aria-labelledby='create-new-client-dialog-title' maxWidth='sm'>
 			<CreateNewClientDialogTitle onClose={onClose} id='create-new-client-dialog-title'>
-				Create New ClienWithoutIdt
+				Create New Client
 			</CreateNewClientDialogTitle>
 			<CreateNewClientDialogContent onNextFormContent={onClose} />
 		</Dialog>
@@ -92,8 +115,8 @@ function CreateNewClientDialogContent({ onNextFormContent }: { onNextFormContent
 
 		// If the user is on the last step, submit an action.
 		if (activeFormContentStep === formContentSteps.length - 1) {
-			submitForm(createFormData(formFieldValues), { action: formAction, method: 'POST' });
 			onNextFormContent?.();
+			submitForm(createFormData(formFieldValues), { action: formAction, method: 'POST' });
 			return;
 		}
 
@@ -139,7 +162,7 @@ function CreateNewClientDialogContent({ onNextFormContent }: { onNextFormContent
 					Back
 				</Button>
 				<Button variant='contained' onClick={handleNextFormContent}>
-					{activeFormContentStep === formContentSteps.length - 1 ? 'Create ClientWithoutId' : 'Continue'}
+					{activeFormContentStep === formContentSteps.length - 1 ? 'Create Client' : 'Continue'}
 				</Button>
 			</DialogActions>
 		</>
