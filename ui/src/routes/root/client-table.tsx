@@ -71,6 +71,7 @@ function fixedHeaderContent() {
 					variant='head'
 					sx={{
 						fontWeight: 'bold',
+						backgroundColor: 'white',
 					}}
 				>
 					{column.label}
