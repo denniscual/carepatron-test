@@ -1,16 +1,8 @@
 import { Button, Stack } from '@mui/material';
 import { TextField } from 'components/ui/textfield';
 import { Client } from 'lib/types';
-import { FORM_FIELD_ERROR_MESSAGES } from 'lib/validation-message';
-import {
-	ActionFunction,
-	Form,
-	redirect,
-	useActionData,
-	useNavigate,
-	useParams,
-	useRouteLoaderData,
-} from 'react-router-dom';
+import { ERROR_MESSAGES } from 'lib/error-message';
+import { ActionFunction, Form, redirect, useActionData, useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { updateClient } from 'services/api';
 import { LoaderData } from '../layout';
 
@@ -21,16 +13,16 @@ export const action: ActionFunction = async ({ request }) => {
 		const values = Object.fromEntries(formData) as any as Client;
 
 		if (values.firstName === '') {
-			errors.firstName = FORM_FIELD_ERROR_MESSAGES.required;
+			errors.firstName = ERROR_MESSAGES.required;
 		}
 		if (values.lastName === '') {
-			errors.lastName = FORM_FIELD_ERROR_MESSAGES.required;
+			errors.lastName = ERROR_MESSAGES.required;
 		}
 		if (values.email === '') {
-			errors.email = FORM_FIELD_ERROR_MESSAGES.required;
+			errors.email = ERROR_MESSAGES.required;
 		}
 		if (values.phoneNumber === '') {
-			errors.phoneNumber = FORM_FIELD_ERROR_MESSAGES.required;
+			errors.phoneNumber = ERROR_MESSAGES.required;
 		}
 
 		if (Object.keys(errors).length) {

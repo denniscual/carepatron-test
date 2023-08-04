@@ -18,7 +18,7 @@ import { ChangeEventHandler, ComponentProps, ElementRef, ReactNode, useEffect, u
 import { TextField } from 'components/ui/textfield';
 import { useFormAction, useSubmit } from 'react-router-dom';
 import { createFormData } from 'lib/utils';
-import { FORM_FIELD_ERROR_MESSAGES } from 'lib/validation-message';
+import { ERROR_MESSAGES } from 'lib/error-message';
 import { Client } from 'lib/types';
 
 type ClientWithoutId = Omit<Client, 'id'>;
@@ -202,10 +202,10 @@ const formContentSteps: {
 		validateFormFieldValues(values: ClientWithoutId) {
 			const errors: Record<string, string> = {};
 			if (values.firstName === '') {
-				errors.firstName = FORM_FIELD_ERROR_MESSAGES.required;
+				errors.firstName = ERROR_MESSAGES.required;
 			}
 			if (values.lastName === '') {
-				errors.lastName = FORM_FIELD_ERROR_MESSAGES.required;
+				errors.lastName = ERROR_MESSAGES.required;
 			}
 			if (Object.keys(errors).length) {
 				return errors;
@@ -232,10 +232,10 @@ const formContentSteps: {
 		validateFormFieldValues(values: ClientWithoutId) {
 			const errors: Record<string, string> = {};
 			if (values.email === '') {
-				errors.email = FORM_FIELD_ERROR_MESSAGES.required;
+				errors.email = ERROR_MESSAGES.required;
 			}
 			if (values.phoneNumber === '') {
-				errors.phoneNumber = FORM_FIELD_ERROR_MESSAGES.required;
+				errors.phoneNumber = ERROR_MESSAGES.required;
 			}
 			if (Object.keys(errors).length) {
 				return errors;

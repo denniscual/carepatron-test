@@ -1,3 +1,4 @@
+import { ERROR_MESSAGES } from 'lib/error-message';
 import { ActionFunction, redirect } from 'react-router-dom';
 import { deleteClient } from 'services/api/index';
 
@@ -9,7 +10,7 @@ export const action: ActionFunction = async ({ request }) => {
 				const clientId = formData.get('clientId');
 
 				if (!clientId || typeof clientId !== 'string') {
-					throw new Error('Client Id must be provided.');
+					throw new Error(ERROR_MESSAGES.clientIdNotFound);
 				}
 
 				await deleteClient(clientId);

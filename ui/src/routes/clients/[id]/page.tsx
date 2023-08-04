@@ -1,5 +1,5 @@
 import { Button, Stack, Typography } from '@mui/material';
-import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { Form, useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { LoaderData } from './layout';
 
 export default function ClientDetails() {
@@ -19,9 +19,12 @@ export default function ClientDetails() {
 				<Button variant='outlined' onClick={() => navigate('edit')}>
 					Edit
 				</Button>
-				<Button variant='outlined' color='error'>
-					Delete
-				</Button>
+				<Form method='delete' action='destroy'>
+					<input hidden type='text' name='clientId' defaultValue={client.id} />
+					<Button variant='outlined' color='error' type='submit'>
+						Delete
+					</Button>
+				</Form>
 			</Stack>
 		</Stack>
 	);
