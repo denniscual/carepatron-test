@@ -111,23 +111,23 @@ obj/
 
 **dist/
 node_modules/
-ui/build
+apps/ui/build
 .DS_Store
-ui/*.tgz
-ui/template/src/__tests__/__snapshots__/
-ui/lerna-debug.log
-ui/npm-debug.log*
+apps/ui/*.tgz
+apps/ui/template/src/__tests__/__snapshots__/
+apps/ui/lerna-debug.log
+apps/ui/npm-debug.log*
 .DS_Store
-ui/cypress/screenshots/*
-ui/cypress/videos/*
+apps/ui/cypress/screenshots/*
+apps/ui/cypress/videos/*
 
 .serverless/
 *.log
 
 **/DontCommit.sql
 
-mock-api/build
-mock-api/package-lock.json
+apps/mock-api/build
+apps/mock-api/package-lock.json
 
 # nvimlogs
 *.nvimlog
