@@ -36,7 +36,7 @@ export default function SearchBar({ query }: { query: string }) {
 				const isFirstSearch = query === '';
 				// Create new stack if the query is empty. Else, update the search params while replacing the current stack.
 				// In this way, we can avoid polluting the history stack.
-				navigate(`/?${new URLSearchParams({ q: value })}`, {
+				navigate(`/clients?${new URLSearchParams({ q: value })}`, {
 					replace: !isFirstSearch,
 				});
 			}}
