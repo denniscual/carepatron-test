@@ -1,16 +1,20 @@
-import { Paper } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Paper, Stack } from '@mui/material';
+import { Link, Outlet } from 'react-router-dom';
 
 export default function ClientLayout() {
 	return (
 		<Paper
 			sx={{
-				maxWidth: 'sm',
+				maxWidth: 400,
 				m: 'auto',
 				p: 4,
 			}}
 		>
-			<Outlet />
+			<Stack gap={3}>
+				<Link to='..'>Back to list</Link>
+
+				<Outlet />
+			</Stack>
 		</Paper>
 	);
 }
