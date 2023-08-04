@@ -11,7 +11,14 @@ export default function ClientLayout() {
 			}}
 		>
 			<Stack gap={4}>
-				<Link to='..'>Back to list</Link>
+				<Link
+					style={{
+						fontSize: 14,
+					}}
+					to='..'
+				>
+					Back to list
+				</Link>
 
 				<Outlet />
 			</Stack>

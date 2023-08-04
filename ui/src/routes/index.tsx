@@ -5,7 +5,7 @@ import Clients, { loader as clientsLoader, action as clientsAction } from './cli
 import Client, { loader as clientLoader } from './clients/[id]/page';
 import { action as clientDestroyAction } from './clients/[id]/destroy.action';
 import ClientLayout from './clients/[id]/layout';
-import EditClient from './clients/[id]/edit/page';
+import EditClient, { action as editClientAction } from './clients/[id]/edit/page';
 
 const router = createBrowserRouter([
 	{
@@ -34,6 +34,7 @@ const router = createBrowserRouter([
 					{
 						path: 'edit',
 						element: <EditClient />,
+						action: editClientAction,
 					},
 					{
 						path: 'clients/:id/destroy',
