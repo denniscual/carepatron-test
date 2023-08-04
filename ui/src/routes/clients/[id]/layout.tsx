@@ -10,7 +10,7 @@ export default function ClientLayout() {
 				p: 4,
 			}}
 		>
-			<Stack gap={3}>
+			<Stack gap={4}>
 				<Link to='..'>Back to list</Link>
 
 				<Outlet />

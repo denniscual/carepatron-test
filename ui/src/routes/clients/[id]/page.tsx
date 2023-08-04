@@ -37,10 +37,10 @@ export default function ClientDetails() {
 				<Typography variant='body1'>{client.phoneNumber}</Typography>
 			</div>
 			<Stack direction='row' gap={1.5}>
-				<Button variant='outlined' size='small' onClick={() => navigate('edit')}>
+				<Button variant='outlined' onClick={() => navigate('edit')}>
 					Edit
 				</Button>
-				<Button variant='outlined' color='error' size='small'>
+				<Button variant='outlined' color='error'>
 					Delete
 				</Button>
 			</Stack>
