@@ -3,6 +3,7 @@ import Layout from './layout';
 import Root from './root/page';
 import Clients, { loader as clientsLoader, action as clientsAction } from './clients/page';
 import Client from './clients/[id]/page';
+import { action as clientDestroyAction } from './clients/[id]/destroy.action';
 
 const router = createBrowserRouter([
 	{
@@ -24,7 +25,16 @@ const router = createBrowserRouter([
 					},
 					{
 						path: ':id',
-						element: <Client />,
+						children: [
+							{
+								index: true,
+								element: <Client />,
+							},
+							{
+								path: 'destroy',
+								action: clientDestroyAction,
+							},
+						],
 					},
 				],
 			},

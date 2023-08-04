@@ -51,5 +51,5 @@ app.delete('/clients/:id', (req: Request, res: Response) => {
 	const id = req.params.id;
 	removeClient(id);
 
-	res.status(204);
+	res.status(200).send();
 });

@@ -10,8 +10,8 @@ import { TableVirtuoso, TableComponents } from 'react-virtuoso';
 import { Client } from 'lib/types';
 import { IconButton, Stack } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
+import DeleteClient from './delete-client';
 
 const columns = [
 	{
@@ -54,9 +54,7 @@ function rowContent(_index: number, row: Client) {
 						<TableCell key={dataKey}>
 							<Stack direction='row' rowGap={2} justifyContent='space-evenly' alignItems='center'>
 								<EditLink path={row.id} />
-								<IconButton aria-label='delete' size='small' color='error'>
-									<DeleteIcon fontSize='inherit' />
-								</IconButton>
+								<DeleteClient clientId={row.id} />
 							</Stack>
 						</TableCell>
 					);

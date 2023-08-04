@@ -33,15 +33,9 @@ export const action: ActionFunction = async ({ request }) => {
 			...Object.fromEntries(formData),
 			id: generateId(),
 		} as Client;
-		switch (request.method) {
-			case 'POST': {
-				await createClient(newClient);
-				return redirect('/');
-			}
-			default: {
-				throw new Error('Unhandled action method.');
-			}
-		}
+
+		await createClient(newClient);
+		return redirect('');
 	} catch (err) {
 		throw err;
 	}
