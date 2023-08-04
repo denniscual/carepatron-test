@@ -30,20 +30,28 @@ export default function ClientTable({ clients }: { clients: IClient[] }) {
 				data={clients}
 				components={VirtuosoTableComponents}
 				fixedHeaderContent={fixedHeaderContent}
-				itemContent={itemContent}
+				itemContent={rowContent}
 			/>
 		</Paper>
 	);
 }
 
-function itemContent(_index: number, row: IClient) {
+function rowContent(_index: number, row: IClient) {
 	return (
 		<Fragment>
 			{columns.map(({ dataKey }) => {
 				const value = row[dataKey as keyof IClient];
 				if (dataKey === 'name') {
 					return (
-						<TableCell key={dataKey} component='th' scope='row'>
+						<TableCell
+							key={dataKey}
+							component='th'
+							scope='row'
+							sx={{
+								color: 'primary.main',
+								fontWeight: 'bold',
+							}}
+						>
 							{row.firstName} {row.lastName}
 						</TableCell>
 					);
@@ -62,7 +70,7 @@ function fixedHeaderContent() {
 					key={column.dataKey}
 					variant='head'
 					sx={{
-						backgroundColor: 'background.paper',
+						fontWeight: 'bold',
 					}}
 				>
 					{column.label}
@@ -83,7 +91,7 @@ const VirtuosoTableComponents: TableComponents<IClient> = {
 	EmptyPlaceholder: function EmptyPlaceholder() {
 		return (
 			<TableRow>
-				<TableCell component='th' scope='row' colSpan={3}>
+				<TableCell component='th' scope='row' colSpan={columns.length}>
 					No clients
 				</TableCell>
 			</TableRow>
